@@ -15,7 +15,14 @@ logging.getLogger("PIL").setLevel(logging.WARNING)
 
 import numpy as np
 import tensorflow as tf
-tf.config.gpu.set_per_process_memory_growth(True)
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+    try:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    except RuntimeError as e:
+        print(e)
+
 from matchnet.data import load
 from matchnet import TrainEngine
 from matchnet.models import MatchingNetwork
